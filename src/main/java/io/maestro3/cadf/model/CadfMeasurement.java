@@ -18,9 +18,9 @@ package io.maestro3.cadf.model;
 
 import io.maestro3.cadf.util.Assert;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 
 
 public class CadfMeasurement<T> {

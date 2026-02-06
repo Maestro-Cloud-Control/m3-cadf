@@ -23,27 +23,29 @@
 
     <groupId>io.maestro3.cadf</groupId>
     <artifactId>m3-cadf</artifactId>
-    <version>3.97.2</version>
+    <version>4.158.1</version>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-        <maven-compiler-plugin.version>3.10.1</maven-compiler-plugin.version>
-        <maven-compiler-plugin.source>11</maven-compiler-plugin.source>
-        <maven-compiler-plugin.target>11</maven-compiler-plugin.target>
+        <maven-compiler-plugin.version>3.14.1</maven-compiler-plugin.version>
+        <maven-compiler-plugin.source>21</maven-compiler-plugin.source>
+        <maven-compiler-plugin.target>21</maven-compiler-plugin.target>
 
-        <maven-enforcer-plugin.version>3.0.0-M1</maven-enforcer-plugin.version>
-        <maven-help-plugin.version>2.1.1</maven-help-plugin.version>
+        <maven-enforcer-plugin.version>3.6.2</maven-enforcer-plugin.version>
+        <maven-help-plugin.version>3.5.1</maven-help-plugin.version>
 
-        <javax-validation.version>2.0.1.Final</javax-validation.version>
+        <jakarta-validation.version>3.0.2</jakarta-validation.version>
+
+        <maven-s3-wagon.version>1.3.4-M3</maven-s3-wagon.version>
     </properties>
 
     <dependencies>
         <dependency>
-            <groupId>javax.validation</groupId>
-            <artifactId>validation-api</artifactId>
-            <version>${javax-validation.version}</version>
+            <groupId>jakarta.validation</groupId>
+            <artifactId>jakarta.validation-api</artifactId>
+            <version>${jakarta-validation.version}</version>
         </dependency>
     </dependencies>
     
@@ -82,6 +84,13 @@
                 <version>${maven-help-plugin.version}</version>
             </plugin>
         </plugins>
+        <extensions>
+            <extension>
+                <groupId>com.m3.wagon</groupId>
+                <artifactId>maven-s3-wagon</artifactId>
+                <version>${maven-s3-wagon.version}</version>
+            </extension>
+        </extensions>
     </build>
 
     <repositories>
@@ -90,5 +99,23 @@
             <name>Maven Central</name>
             <url>https://repo1.maven.org/maven2/</url>
         </repository>
+        <repository>
+            <id>maestro3-public</id>
+            <name>maestro3-public</name>
+            <url>s3://maestro3-public/</url>
+        </repository>
+        <repository>
+            <id>m2-artifactory</id>
+            <name>m2-artifactory</name>
+            <url>https://m2-artifactory-j8.s3.eu-central-1.amazonaws.com/maestro2/39965/</url>
+        </repository>
     </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>maestro3-public-https</id>
+            <name>maestro3-public</name>
+            <url>https://maestro3-public.s3.eu-central-1.amazonaws.com/</url>
+        </pluginRepository>
+    </pluginRepositories>
 </project>

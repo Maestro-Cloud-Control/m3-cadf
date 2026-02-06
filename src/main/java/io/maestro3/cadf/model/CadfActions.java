@@ -265,6 +265,9 @@ public final class CadfActions {
         public CadfCommandAction reboot() {
             return new CadfCommandAction("/reboot");
         }
+        public CadfCommandAction resize() {
+            return new CadfCommandAction("/resize");
+        }
 
         public CadfCommandAction delete() {
             return new CadfCommandAction("/delete");
@@ -414,6 +417,8 @@ public final class CadfActions {
                 return command().stop();
             case "command/reboot":
                 return command().reboot();
+            case "command/resize":
+                return command().resize();
             case "command/delete":
                 return command().delete();
             case "move":

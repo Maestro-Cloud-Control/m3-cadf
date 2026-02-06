@@ -16,9 +16,9 @@
 
 package io.maestro3.cadf.model;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 
 /**
  * Valid Credential typed data SHALL contain at least one valid identify token.

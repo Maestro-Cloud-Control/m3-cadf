@@ -19,7 +19,7 @@ package io.maestro3.cadf.model;
 import io.maestro3.cadf.ICadfResourceType;
 import io.maestro3.cadf.util.Assert;
 
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
 import java.util.Arrays;
 import java.util.List;
 
