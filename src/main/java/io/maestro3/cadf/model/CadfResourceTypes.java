@@ -21,11 +21,9 @@ import io.maestro3.cadf.ICadfResourceType;
 /**
  * Tree of constants.
  * This tree is based on builder pattern, so it may look complicated here, but is very convenient to use:
- * <p/>
  * String relativeUri = CadfResourceTree.compute().machine().getRelativeUri();<br/>
  * String relativeUri = CadfResourceTree.compute().machine().vm().getRelativeUri();<br/>
  * ICadfResourceType resourceType = CadfResourceTree.compute().machine().vm();
- * <p/>
  */
 public final class CadfResourceTypes {
 
