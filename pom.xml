@@ -25,6 +25,42 @@
     <artifactId>m3-cadf</artifactId>
     <version>4.158.1</version>
 
+    <name>${project.groupId}:${project.artifactId}</name>
+    <description>CADF event standard library.</description>
+    <url>https://github.com/Maestro-Cloud-Control/m3-cadf</url>
+
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>Karyna Filimonova</name>
+            <email>oss.maestro3@gmail.com</email>
+        </developer>
+        <developer>
+            <name>Serhii Akhmetshyn</name>
+            <email>oss.maestro3@gmail.com</email>
+        </developer>
+        <developer>
+            <name>Yevhen Nadin</name>
+            <email>oss.maestro3@gmail.com</email>
+        </developer>
+        <developer>
+            <name>Kyrylo Andreiev</name>
+            <email>oss.maestro3@gmail.com</email>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git:https://github.com/Maestro-Cloud-Control/m3-cadf.git</connection>
+        <developerConnection>scm:git:https://github.com/Maestro-Cloud-Control/m3-cadf.git</developerConnection>
+        <url>https://github.com/Maestro-Cloud-Control/m3-cadf</url>
+    </scm>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -38,7 +74,17 @@
 
         <jakarta-validation.version>3.0.2</jakarta-validation.version>
 
-        <maven-s3-wagon.version>1.3.4-M3</maven-s3-wagon.version>
+        <!-- Publishing -->
+        <central.publishing.plugin.version>0.11.0</central.publishing.plugin.version>
+        <maven.javadoc.plugin.version>3.12.0</maven.javadoc.plugin.version>
+        <maven.source.plugin.version>3.4.0</maven.source.plugin.version>
+        <maven.gpg.plugin.version>3.2.8</maven.gpg.plugin.version>
+
+        <github.owner>Maestro-Cloud-Control</github.owner>
+        <github.repository>m3-cadf</github.repository>
+
+        <central.autoPublish>false</central.autoPublish>
+        <central.waitUntil>validated</central.waitUntil>
     </properties>
 
     <dependencies>
@@ -48,7 +94,7 @@
             <version>${jakarta-validation.version}</version>
         </dependency>
     </dependencies>
-    
+
     <build>
         <plugins>
             <plugin>
@@ -84,38 +130,92 @@
                 <version>${maven-help-plugin.version}</version>
             </plugin>
         </plugins>
-        <extensions>
-            <extension>
-                <groupId>com.m3.wagon</groupId>
-                <artifactId>maven-s3-wagon</artifactId>
-                <version>${maven-s3-wagon.version}</version>
-            </extension>
-        </extensions>
     </build>
 
-    <repositories>
-        <repository>
-            <id>maven.central</id>
-            <name>Maven Central</name>
-            <url>https://repo1.maven.org/maven2/</url>
-        </repository>
-        <repository>
-            <id>maestro3-public</id>
-            <name>maestro3-public</name>
-            <url>s3://maestro3-public/</url>
-        </repository>
-        <repository>
-            <id>m2-artifactory</id>
-            <name>m2-artifactory</name>
-            <url>https://m2-artifactory-j8.s3.eu-central-1.amazonaws.com/maestro2/39965/</url>
-        </repository>
-    </repositories>
+    <profiles>
+        <!-- Publish to GitHub Packages -->
+        <profile>
+            <id>github</id>
 
-    <pluginRepositories>
-        <pluginRepository>
-            <id>maestro3-public-https</id>
-            <name>maestro3-public</name>
-            <url>https://maestro3-public.s3.eu-central-1.amazonaws.com/</url>
-        </pluginRepository>
-    </pluginRepositories>
+            <distributionManagement>
+                <repository>
+                    <id>github</id>
+                    <name>GitHub Packages</name>
+                    <url>https://maven.pkg.github.com/${github.owner}/${github.repository}</url>
+                </repository>
+            </distributionManagement>
+        </profile>
+
+        <!-- Publish release artifacts to Maven Central -->
+        <profile>
+            <id>central</id>
+
+            <build>
+                <plugins>
+                    <!-- Generates artifactId-version-sources.jar -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <version>${maven.source.plugin.version}</version>
+                        <executions>
+                            <execution>
+                                <id>attach-sources</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>jar-no-fork</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <!-- Generates artifactId-version-javadoc.jar -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>${maven.javadoc.plugin.version}</version>
+                        <executions>
+                            <execution>
+                                <id>attach-javadocs</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <!-- Signs pom, jar, sources.jar and javadoc.jar -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>${maven.gpg.plugin.version}</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <!-- Uploads release bundle to Central Portal -->
+                    <plugin>
+                        <groupId>org.sonatype.central</groupId>
+                        <artifactId>central-publishing-maven-plugin</artifactId>
+                        <version>${central.publishing.plugin.version}</version>
+                        <extensions>true</extensions>
+
+                        <configuration>
+                            <publishingServerId>central</publishingServerId>
+                            <deploymentName>${project.artifactId}-${project.version}</deploymentName>
+
+                            <autoPublish>${central.autoPublish}</autoPublish>
+                            <waitUntil>${central.waitUntil}</waitUntil>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
